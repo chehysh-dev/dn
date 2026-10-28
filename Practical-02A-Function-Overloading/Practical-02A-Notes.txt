@@ -1,0 +1,106 @@
+================================================================================
+PRACTICAL 02A: FUNCTION OVERLOADING IN C#
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# program demonstrating compile-time polymorphism (function overloading) by computing areas of square, rectangle, and circle using multiple methods with identical names but distinct parameter signatures.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux
+
+3. THEORY & CONCEPT:
+   Function overloading is a manifestation of compile-time (static) polymorphism where multiple methods within the same class share identical names but differ in their signature (number, type, or order of parameters).
+   The C# compiler binds the appropriate method at compilation based on the arguments supplied at the call site.
+   Return type alone cannot distinguish overloaded methods; parameter lists must be unique.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a C# Console Application.
+   2. Define a class named 'area' containing three overloaded methods:
+   3.   - 'CalculateArea(int side)': Computes area of a square.
+   4.   - 'CalculateArea(int length, int breadth)': Computes area of a rectangle.
+   5.   - 'CalculateArea(float p, double rad)': Computes and returns area of a circle.
+   6. In 'Main()', instantiate class 'area' and request user input for side, length, breadth, and radius.
+   7. Invoke each overloaded method passing appropriate arguments.
+   8. Compile and run the program.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-02A-Code.cs
+----------------------------------------------------------------------
+using System;
+
+namespace B4_Arjun_Nitin
+{
+    class area
+    {
+        public void CalculateArea(int side)
+        {
+            Console.WriteLine("Area of Square = " + (side * side));
+        }
+
+        public void CalculateArea(int length, int breadth)
+        {
+            Console.WriteLine("Area of Rectangle =" + (breadth * length));
+        }
+
+        public double CalculateArea(float p, double rad)
+        {
+            return (p * rad * rad);
+        }
+    }
+
+    internal class functionoverloading
+    {
+        static void Main(string[] args)
+        {
+            area obj = new area();
+
+            Console.WriteLine("Enter the side");
+            int side = Convert.ToInt32(Console.ReadLine());
+            obj.CalculateArea(side);
+
+            Console.WriteLine("Enter the length of Rectangle :");
+            int length = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter the breadth of Rectangle :");
+            int breadth = Convert.ToInt32(Console.ReadLine());
+            obj.CalculateArea(length, breadth);
+
+            Console.WriteLine("Enter the Radius of circle :");
+            double rad = double.Parse(Console.ReadLine());
+            Console.WriteLine("circle" + obj.CalculateArea(3.14f, rad));
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Enter side (e.g. 2).
+   3. Enter length (e.g. 3) and breadth (e.g. 2).
+   4. Enter radius (e.g. 5).
+   5. Verify calculated areas.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Enter the side
+   2
+   Area of Square = 4
+   Enter the length of Rectangle :
+   3
+   Enter the breadth of Rectangle :
+   2
+   Area of Rectangle =6
+   Enter the Radius of circle :
+   5
+   circle78.5000026226044
+
+8. RESULT:
+   Method overloading demonstrating static polymorphism was successfully implemented and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Floating-point literal: Pass float literals with 'f' suffix (e.g. '3.14f') to avoid ambiguity with double literals.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

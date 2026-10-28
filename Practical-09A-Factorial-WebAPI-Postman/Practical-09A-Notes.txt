@@ -1,0 +1,109 @@
+================================================================================
+PRACTICAL 09A: CREATE AN API ENDPOINT TO CALCULATE FACTORIAL AND TEST USING POSTMAN
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Core Web API endpoint that computes the factorial of an input integer with negative number validation and test endpoint responses using Postman and web browsers.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Web API template
+   * Postman API Testing Tool or cURL CLI
+   * Web browser
+
+3. THEORY & CONCEPT:
+   RESTful API Parameterization: Route parameters ('[HttpGet("factorial/{number}")]') extract values directly from the URI path segment and bind them to method arguments.
+   HTTP Status Codes:
+     - 200 OK: 'Ok(object)' returns successful calculation result alongside HTTP status 200.
+     - 400 Bad Request: 'BadRequest(message)' returns client error response when invalid input (negative numbers) is provided.
+   Factorial Algorithm: For a non-negative integer n, n! = 1 * 2 * ... * n. Factorial of 0 is 1. The 'long' data type prevents integer overflow for inputs up to 20! (2,432,902,008,176,640,000).
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Open Visual Studio and create an 'ASP.NET Core Web API' project named 'FactorialAPI'.
+   2. In 'Controllers/', create 'MathController.cs' inheriting from 'ControllerBase'.
+   3. Define action '[HttpGet("factorial/{number}")] public IActionResult GetFactorial(int number)'.
+   4. Validate: if 'number < 0', return 'BadRequest("Factorial not possible for negative numbers.")'.
+   5. Iterate from 1 to number, calculating factorial into a 'long' variable.
+   6. Return 'Ok(new { Number = number, Factorial = factorial })'.
+   7. Run the application via 'dotnet run'.
+   8. Test with Postman: Send GET to 'https://localhost:<port>/api/math/factorial/5' -> verify 200 OK and factorial 120.
+   9. Send GET to 'https://localhost:<port>/api/math/factorial/-2' -> verify 400 Bad Request.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-09A-Code.cs (Controllers/MathController.cs)
+----------------------------------------------------------------------
+using Microsoft.AspNetCore.Mvc;
+
+namespace FactorialAPI.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class MathController : ControllerBase
+    {
+        [HttpGet("factorial/{number}")]
+        public IActionResult GetFactorial(int number)
+        {
+            if (number < 0)
+            {
+                return BadRequest("Factorial not possible for negative numbers.");
+            }
+
+            long factorial = 1;
+
+            for (int i = 1; i <= number; i++)
+            {
+                factorial *= i;
+            }
+
+            return Ok(new
+            {
+                Number = number,
+                Factorial = factorial
+            });
+        }
+    }
+}
+
+----------------------------------------------------------------------
+File: Program.cs (Startup Configuration)
+----------------------------------------------------------------------
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.MapControllers();
+
+app.Run();
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Open Postman, create a new GET request.
+   3. Set URL to: https://localhost:<port>/api/math/factorial/5
+   4. Click Send -> Verify Status: 200 OK and response body.
+   5. Set URL to: https://localhost:<port>/api/math/factorial/-2
+   6. Click Send -> Verify Status: 400 Bad Request with error message.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Postman Test 1 (Positive Integer: 5):
+   Status: 200 OK
+   {
+     "number": 5,
+     "factorial": 120
+   }
+   
+   Postman Test 2 (Negative Integer: -2):
+   Status: 400 Bad Request
+   Factorial not possible for negative numbers.
+
+8. RESULT:
+   Factorial calculation API endpoint with Postman verification was successfully developed and tested.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Integer Overflow: For inputs greater than 20, 'long' overflows and returns negative or incorrect values. In production math libraries, use 'System.Numerics.BigInteger' for arbitrary-precision arithmetic.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

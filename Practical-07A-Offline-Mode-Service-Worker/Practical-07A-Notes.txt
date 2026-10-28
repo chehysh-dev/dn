@@ -1,0 +1,106 @@
+================================================================================
+PRACTICAL 07A: DEVELOP A PWA THAT WORKS IN OFFLINE MODE USING SERVICE WORKER
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Core MVC PWA that serves cached application routes ('/' and '/Home/Index') using a Cache-First / Stale-While-Revalidate Service Worker strategy for full offline operation.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Web App (Model-View-Controller) template
+   * Google Chrome / Microsoft Edge browser
+   * PWA icon files (icon1.png: 192x192, icon2.png: 512x512)
+
+3. THEORY & CONCEPT:
+   Cache-First Strategy: When a resource request is made, the Service Worker inspects local cache storage first ('caches.match(event.request)'). If found, the cached response is immediately returned, offering near-instantaneous load times and offline availability.
+   Network Fallback: If the requested resource is not present in cache, the request falls back to the network ('fetch(event.request)').
+   App Shell Architecture: Pre-caching core application routes enables the entire user interface to function seamlessly without connectivity.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create an ASP.NET Core MVC project named 'SWOfflinePWA'.
+   2. In 'Views/Home/Index.cshtml', add College Information Portal offline demo heading.
+   3. In 'wwwroot/manifest.json', specify PWA metadata, standalone display, and theme colors.
+   4. In 'wwwroot/service-worker.js', define cache name 'pwa-cache-v1' and cache routes '/' and '/Home/Index'.
+   5. Implement fetch handler with 'caches.match(event.request).then(response => response || fetch(event.request))'.
+   6. In 'Views/Shared/_Layout.cshtml', register 'manifest.json' and 'service-worker.js'.
+   7. Ensure 'app.UseStaticFiles();' is declared in 'Program.cs'.
+   8. Run the application in Chrome, inspect DevTools -> Application tab to confirm Service Worker activation.
+   9. Set Network to Offline in DevTools and refresh the page to test offline browsing.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-07A-Code.js (wwwroot/service-worker.js)
+----------------------------------------------------------------------
+const CACHE_NAME = "pwa-cache-v1";
+const urlsToCache = ["/", "/Home/Index"];
+
+self.addEventListener("install", event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(urlsToCache))
+    );
+});
+
+self.addEventListener("fetch", event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => response || fetch(event.request))
+    );
+});
+
+----------------------------------------------------------------------
+File: manifest.json (wwwroot/manifest.json)
+----------------------------------------------------------------------
+{
+  "name": "Offline PWA",
+  "short_name": "OfflinePWA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "white",
+  "theme_color": "blue",
+  "icons": [
+    {
+      "src": "/icons/icon1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+----------------------------------------------------------------------
+File: Index.cshtml (Views/Home/Index.cshtml)
+----------------------------------------------------------------------
+<div class="text-center">
+    <h1>College Information Portal</h1>
+    <h3>PWA Offline Demo</h3>
+    <p>This application works without internet connection.</p>
+</div>
+
+6. HOW TO RUN THE CODE:
+   1. Run application via 'dotnet run'.
+   2. Open Chrome at https://localhost:<port>/
+   3. Open DevTools (F12) -> Application -> Service Workers -> verify 'activated and running'.
+   4. Switch to Network tab -> Check 'Offline'.
+   5. Refresh page -> The webpage renders completely from cache without network connectivity.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Webpage renders in full offline mode:
+   College Information Portal
+   PWA Offline Demo
+   This application works without internet connection.
+   (Console shows requests served from Service Worker cache)
+
+8. RESULT:
+   PWA full offline mode operation using Service Worker caching was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Route Caching Matching: In ASP.NET Core MVC, '/' and '/Home/Index' may resolve to the same action. Precaching both ensures consistent matching regardless of whether the user navigates to root or the explicit action URL.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

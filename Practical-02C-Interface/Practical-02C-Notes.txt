@@ -1,0 +1,88 @@
+================================================================================
+PRACTICAL 02C: INTERFACE IMPLEMENTATION IN C#
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# program demonstrating interface definition and implementation across multiple classes (Square and Circle) with polymorphic invocation via interface references.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux
+
+3. THEORY & CONCEPT:
+   An interface is a completely abstract type containing only method signatures without implementation bodies.
+   Classes implementing an interface must provide concrete implementations for all interface members.
+   Interfaces allow polymorphism and overcome C#'s single-inheritance limitation by enabling a class to implement multiple interfaces.
+   The 'as' operator performs safe reference conversions to the interface type, returning null if conversion fails.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a C# Console Application.
+   2. Declare an interface 'Area' with method 'double compute(double x);'.
+   3. Implement 'Area' in class 'square' to return 'x * x'.
+   4. Implement 'Area' in class 'circle' to return 'Math.PI * x * x'.
+   5. In 'Main()', create instances of 'square' and 'circle'.
+   6. Cast objects to the 'Area' interface reference using the 'as' keyword.
+   7. Call 'compute(10.0)' polymorphically on each object and print results.
+   8. Build and execute the program.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-02C-Code.cs
+----------------------------------------------------------------------
+using System;
+
+interface Area
+{
+    double compute(double x);
+}
+
+class square : Area
+{
+    public double compute(double x)
+    {
+        return x * x;
+    }
+}
+
+class circle : Area
+{
+    public double compute(double x)
+    {
+        return Math.PI * x * x;
+    }
+}
+
+class interf
+{
+    public static void Main(string[] args)
+    {
+        square sq = new square();
+        circle c = new circle();
+        Area a;
+
+        a = sq as Area;
+        Console.WriteLine("Area of Square=" + a.compute(10.0));
+
+        a = c as Area;
+        Console.WriteLine("Area of Circle=" + a.compute(10.0));
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. Run: dotnet run
+   2. Observe polymorphic computation of square area (side 10) and circle area (radius 10).
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Area of Square=100
+   Area of Circle=314.159265358979
+
+8. RESULT:
+   Interface implementation and polymorphic reference dispatch in C# was successfully demonstrated and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Explicit Interface Implementation: Interface methods must be declared 'public' in the implementing class unless explicitly qualified with interface name.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

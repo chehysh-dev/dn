@@ -1,0 +1,150 @@
+================================================================================
+PRACTICAL 04B: REGISTRATION FORM WITH VALIDATION CONTROLS
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Web Forms application implementing standard validation controls: RequiredFieldValidator, RangeValidator, RegularExpressionValidator, CompareValidator, and ValidationSummary.
+
+2. REQUIREMENTS:
+   * Visual Studio 2019 / 2022 / 2026
+   * .NET Framework 4.7.2 / 4.8
+   * IIS Express web server
+   * Web browser
+
+3. THEORY & CONCEPT:
+   ASP.NET Validation Controls provide automated client-side (JavaScript) and server-side validation without requiring custom script writing.
+   Validation Controls Demonstrated:
+     - RequiredFieldValidator: Ensures mandatory fields are not left blank.
+     - RangeValidator: Validates that an input falls within minimum and maximum numeric boundaries (18 to 60).
+     - RegularExpressionValidator: Validates formatting patterns (such as standard email structure) via regex.
+     - CompareValidator: Verifies that the Confirm Password matches the Password field.
+     - ValidationSummary: Aggregates all error messages into a consolidated red summary list.
+   UnobtrusiveValidationMode: Setting this key to 'None' in Web.config permits legacy postback validation without requiring jQuery scripts.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create an ASP.NET Web Application (.NET Framework) with Web Forms support.
+   2. Add 'WebForm1.aspx' to the project.
+   3. Add TextBox controls for Name, Age, Email, Password, and Confirm Password.
+   4. Bind appropriate Validator controls to each input field using 'ControlToValidate'.
+   5. Add a ValidationSummary control and a success Label.
+   6. In 'Web.config', configure 'ValidationSettings:UnobtrusiveValidationMode' to 'None'.
+   7. In 'WebForm1.aspx.cs', verify 'Page.IsValid' inside 'btnReg_Click' and display 'Registration successful.'.
+   8. Run the application and test with both invalid and valid inputs.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-04B-Code.aspx (WebForm1.aspx)
+----------------------------------------------------------------------
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="WebApplicationValidation.WebForm1" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>Registration with Validation</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <h2>Registration with Validation</h2>
+
+        Name:
+        <asp:TextBox ID="txtName" runat="server" />
+        <asp:RequiredFieldValidator ControlToValidate="txtName" ErrorMessage="Name is required!" ForeColor="Red" runat="server" />
+        <br /><br />
+
+        Age:
+        <asp:TextBox ID="txtAge" runat="server" />
+        <asp:RequiredFieldValidator ControlToValidate="txtAge" ErrorMessage="Age required!" ForeColor="Red" runat="server" />
+        <asp:RangeValidator ControlToValidate="txtAge" Type="Integer" MinimumValue="18" MaximumValue="60"
+            ErrorMessage="Age must be 18-60" ForeColor="Red" runat="server" />
+        <br /><br />
+
+        Email:
+        <asp:TextBox ID="txtEmail" runat="server" />
+        <asp:RegularExpressionValidator ControlToValidate="txtEmail"
+            ValidationExpression="^[\w\.\-]+@([\w\-]+\.)+[\w\-]{2,4}$"
+            ErrorMessage="Invalid Email!" ForeColor="Red" runat="server" />
+        <br /><br />
+
+        Password:
+        <asp:TextBox ID="txtPass" TextMode="Password" runat="server" />
+        <asp:RequiredFieldValidator ControlToValidate="txtPass" ErrorMessage="Password required!" ForeColor="Red" runat="server" />
+        <br /><br />
+
+        Confirm:
+        <asp:TextBox ID="txtConfirm" TextMode="Password" runat="server" />
+        <asp:CompareValidator ControlToValidate="txtConfirm" ControlToCompare="txtPass"
+            ErrorMessage="Passwords do not match!" ForeColor="Red" runat="server" />
+        <br /><br />
+
+        <asp:Button ID="btnReg" Text="Register" runat="server" OnClick="btnReg_Click" Height="31px" />
+        <br /><br />
+
+        <asp:ValidationSummary runat="server" ForeColor="Red" HeaderText="The following errors occurred:" />
+        <asp:Label ID="lblMsg" runat="server" ForeColor="Green" Font-Bold="true" />
+    </form>
+</body>
+</html>
+
+----------------------------------------------------------------------
+File: WebForm1.aspx.cs (Code-Behind)
+----------------------------------------------------------------------
+using System;
+
+namespace WebApplicationValidation
+{
+    public partial class WebForm1 : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+        }
+
+        protected void btnReg_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                lblMsg.Text = "Registration successful.";
+            }
+        }
+    }
+}
+
+----------------------------------------------------------------------
+File: Web.config (Configuration)
+----------------------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <appSettings>
+    <add key="ValidationSettings:UnobtrusiveValidationMode" value="None" />
+  </appSettings>
+  <system.web>
+    <compilation debug="true" targetFramework="4.7.2" />
+    <httpRuntime targetFramework="4.7.2" />
+  </system.web>
+</configuration>
+
+6. HOW TO RUN THE CODE:
+   1. Open the project in Visual Studio.
+   2. Ensure Web.config has UnobtrusiveValidationMode set to None.
+   3. Run with IIS Express.
+   4. Leave Name blank and enter age 12 to observe validation errors.
+   5. Enter valid details with matching passwords and submit to view 'Registration successful.'.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Invalid Input State:
+   Name is required!
+   Age must be 18-60
+   Invalid Email!
+   Passwords do not match!
+   
+   Valid Input State:
+   Registration successful.
+
+8. RESULT:
+   Registration Form with comprehensive ASP.NET validation controls was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * InvalidOperationException: WebForms UnobtrusiveValidationMode requires a script resource mapping for jQuery. Fix by setting '<add key="ValidationSettings:UnobtrusiveValidationMode" value="None" />' in Web.config.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

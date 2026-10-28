@@ -1,0 +1,148 @@
+================================================================================
+PRACTICAL 05A: CREATE AN MVC APPLICATION TO PERFORM BASIC ARITHMETIC OPERATIONS
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Core MVC application that performs basic arithmetic calculations (Addition, Subtraction, Multiplication, Division) using a strongly typed Model, a Controller, and a Razor View.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Web App (Model-View-Controller) template
+   * Web browser
+
+3. THEORY & CONCEPT:
+   Model-View-Controller (MVC) architectural pattern separates applications into three interconnected parts:
+     - Model: Represents domain data and business logic ('Calculator.cs').
+     - View: Represents user interface rendered via Razor markup ('Index.cshtml').
+     - Controller: Handles incoming HTTP requests, manipulates the model, and selects views to render ('HomeController.cs').
+   Model Binding in ASP.NET Core automatically maps HTTP form POST data to properties of the 'Calculator' parameter object.
+   Tag Helpers: 'asp-for' renders HTML input attributes with automatic two-way binding to model properties.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Open Visual Studio and choose 'Create a new project'.
+   2. Select 'ASP.NET Core Web App (Model-View-Controller)' and name it 'arithmeticmvc'.
+   3. In the 'Models' folder, create class 'Calculator.cs' with Number1, Number2, operation, and Result.
+   4. In 'Controllers/HomeController.cs', implement the POST 'Index(Calculator calc)' action containing calculation switch logic.
+   5. In 'Views/Home/Index.cshtml', declare '@model arithmeticmvc.Models.Calculator', build the HTML form with 'asp-for' tags, and render '@Model.Result'.
+   6. Run the application via 'dotnet run' or F5 in Visual Studio.
+   7. Enter two numbers, choose an arithmetic operation, and click 'Calculate'.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-05A-Code.cs (Controllers/HomeController.cs)
+----------------------------------------------------------------------
+using arithmeticmvc.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace arithmeticmvc.Controllers
+{
+    public class HomeController : Controller
+    {
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Index(Calculator calc)
+        {
+            switch (calc.operation)
+            {
+                case "+":
+                    calc.Result = calc.Number1 + calc.Number2;
+                    break;
+
+                case "-":
+                    calc.Result = calc.Number1 - calc.Number2;
+                    break;
+
+                case "*":
+                    calc.Result = calc.Number1 * calc.Number2;
+                    break;
+
+                case "/":
+                    if (calc.Number2 != 0)
+                    {
+                        calc.Result = calc.Number1 / calc.Number2;
+                    }
+                    break;
+            }
+
+            return View(calc);
+        }
+    }
+}
+
+----------------------------------------------------------------------
+File: Calculator.cs (Models/Calculator.cs)
+----------------------------------------------------------------------
+namespace arithmeticmvc.Models
+{
+    public class Calculator
+    {
+        public double Number1 { get; set; }
+        public double Number2 { get; set; }
+        public required string operation { get; set; }
+        public double Result { get; set; }
+    }
+}
+
+----------------------------------------------------------------------
+File: Index.cshtml (Views/Home/Index.cshtml)
+----------------------------------------------------------------------
+@model arithmeticmvc.Models.Calculator
+
+<h2>Arithmetic operator</h2>
+
+<form method="post">
+    <label>Enter number 1</label>
+    <input type="number" step="any" asp-for="Number1" />
+    <br /><br />
+
+    <label>Enter Number 2</label>
+    <input type="number" step="any" asp-for="Number2" />
+    <br /><br />
+
+    <label>Select operation</label>
+    <select asp-for="operation">
+        <option value="+">Addition</option>
+        <option value="-">Subtraction</option>
+        <option value="*">Multiplication</option>
+        <option value="/">Division</option>
+    </select>
+
+    <br /><br />
+    <input type="submit" value="Calculate" />
+</form>
+
+@if (Model != null)
+{
+    <h3>Result = @Model.Result</h3>
+}
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Navigate to https://localhost:<port>/
+   3. Enter Number 1 (e.g. 50) and Number 2 (e.g. 25).
+   4. Select operation (Addition, Subtraction, Multiplication, Division).
+   5. Click 'Calculate' to see 'Result = 75' (for addition).
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Calculator Form Displayed:
+   Enter number 1: [ 50 ]
+   Enter Number 2: [ 25 ]
+   Select operation: [ Addition ]
+   Click Calculate -> Output: Result = 75
+   Select operation: [ Division ] -> Output: Result = 2
+
+8. RESULT:
+   ASP.NET Core MVC application performing basic arithmetic operations was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Division by zero: Guard against zero divisor in the controller switch block to avoid runtime NaN or infinity values.
+   * Nullable model: Use '@if (Model != null)' in the view to prevent NullReferenceException on initial GET request.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

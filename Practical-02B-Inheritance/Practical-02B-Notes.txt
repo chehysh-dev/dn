@@ -1,0 +1,112 @@
+================================================================================
+PRACTICAL 02B: INHERITANCE IN C#
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# program demonstrating multilevel and hierarchical inheritance using vehicle, car, sportscar, and bike classes.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux
+
+3. THEORY & CONCEPT:
+   Inheritance is a fundamental OOP principle allowing a derived class (child) to inherit fields, properties, and methods from a base class (parent), promoting code reusability.
+   Hierarchical Inheritance: Multiple derived classes ('car' and 'bike') inherit directly from a common base class ('vehicle').
+   Multilevel Inheritance: A class ('sportscar') inherits from a derived class ('car'), which in turn inherits from the base class ('vehicle').
+   In C#, a class can inherit from only one direct base class (single class inheritance).
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a C# Console Application.
+   2. Define base class 'vehicle' with method 'dispvehicle()'.
+   3. Define derived class 'car' extending 'vehicle' with method 'dispcar()'.
+   4. Define class 'sportscar' extending 'car' with method 'dispsportscar()'.
+   5. Define class 'bike' extending 'vehicle' with method 'dispbike()'.
+   6. In 'Main()', instantiate 'sportscar' and 'bike' objects.
+   7. Call their respective display methods and observe inherited attributes in output.
+   8. Build and execute the program.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-02B-Code.cs
+----------------------------------------------------------------------
+using System;
+
+namespace B4_Arjun_Nitin
+{
+    class vehicle
+    {
+        string name = "Audi";
+
+        public void dispvehicle()
+        {
+            Console.WriteLine("vehicle name =" + name);
+        }
+    }
+
+    class car : vehicle
+    {
+        string model = "2026";
+
+        public void dispcar()
+        {
+            dispvehicle();
+            Console.WriteLine("Car model =" + model);
+        }
+    }
+
+    class sportscar : car
+    {
+        int speed = 450;
+
+        public void dispsportscar()
+        {
+            dispcar();
+            Console.WriteLine("Max speed =" + speed);
+        }
+    }
+
+    class bike : vehicle
+    {
+        string type = "classic";
+
+        public void dispbike()
+        {
+            dispvehicle();
+            Console.WriteLine("bike type =" + type);
+        }
+    }
+
+    internal class inheritance
+    {
+        static void Main(string[] args)
+        {
+            sportscar s = new sportscar();
+            bike b = new bike();
+
+            s.dispsportscar();
+            b.dispbike();
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. Run: dotnet run
+   2. Observe vehicle, car, and sportscar outputs from multilevel chain, and bike output from hierarchical branch.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   vehicle name =Audi
+   Car model =2026
+   Max speed =450
+   vehicle name =Audi
+   bike type =classic
+
+8. RESULT:
+   Multilevel and hierarchical inheritance in C# was successfully implemented and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Access modifiers: Ensure base class methods are marked 'public' or 'protected' so derived classes can invoke them.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

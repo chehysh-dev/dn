@@ -1,0 +1,106 @@
+================================================================================
+PRACTICAL 02D: EXCEPTION HANDLING AND CUSTOM EXCEPTIONS IN C#
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# program demonstrating structured exception handling using try, catch, and finally blocks, including standard exceptions (DivideByZeroException) and a user-defined custom exception (invalidage).
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux
+
+3. THEORY & CONCEPT:
+   Exception handling in C# provides structured error recovery using four keywords: 'try', 'catch', 'finally', and 'throw'.
+   The 'try' block encloses code that may trigger an error. 'catch' handles the thrown exception object. 'finally' executes unconditionally (cleanup code).
+   Custom Exceptions: User-defined exceptions are created by deriving from 'System.Exception', passing custom messages to base constructors.
+   Throw statement: 'throw new invalidage("invalid Age");' raises the custom exception whenever domain validation rules fail.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a C# Console Application.
+   2. Define a custom exception class 'invalidage' inheriting from 'System.Exception'.
+   3. Write a method 'ValidateAge(int age)' that throws 'invalidage' if age is not between 0 and 100.
+   4. In 'Main()', set up a try-catch-finally block performing integer division and executing the finally clause.
+   5. Set up a second try-catch block prompting for user age, calling 'ValidateAge()', and catching 'invalidage'.
+   6. Test with valid age (e.g. 35) and invalid age (e.g. 109).
+   7. Verify error messages and execution flow.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-02D-Code.cs
+----------------------------------------------------------------------
+using System;
+
+class invalidage : Exception
+{
+    public invalidage(String msg) : base(msg)
+    {
+    }
+}
+
+class excepthan
+{
+    static void ValidateAge(int age)
+    {
+        if (age < 0 || age > 100)
+        {
+            throw new invalidage("invalid Age");
+        }
+    }
+
+    public static void Main(string[] args)
+    {
+        try
+        {
+            int a = 10, b = 2;
+            Console.WriteLine(a / b);
+        }
+        catch (DivideByZeroException)
+        {
+            Console.Write("Deniminator should not be zero");
+        }
+        finally
+        {
+            Console.Write("In Finally....");
+        }
+
+        try
+        {
+            Console.Write("\nEnter age: ");
+            int age = int.Parse(Console.ReadLine());
+            ValidateAge(age);
+        }
+        catch (invalidage ex)
+        {
+            Console.WriteLine("Try with other Input !");
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. Run: dotnet run
+   2. Observe arithmetic division output (5) and finally execution.
+   3. Enter valid age (e.g., 35) -> completes normally.
+   4. Run again and enter invalid age (e.g., 109) -> catches invalidage and prints 'Try with other Input !'.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   --- Valid Case ---
+   5
+   In Finally....
+   Enter age: 35
+   
+   --- Invalid Case ---
+   5
+   In Finally....
+   Enter age: 109
+   Try with other Input !
+
+8. RESULT:
+   Structured exception handling and custom exception management in C# was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Exception hierarchy: Always catch specific exceptions before generic 'Exception' to prevent masking unexpected errors.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

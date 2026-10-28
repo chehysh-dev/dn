@@ -1,0 +1,125 @@
+================================================================================
+PRACTICAL 03C: BANKACCOUNT CLASS WITH PROPERTY VALIDATION
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# program demonstrating encapsulation and data validation using C# properties with get and set accessors in a BankAccount class.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux
+
+3. THEORY & CONCEPT:
+   Encapsulation is a core OOP concept that hides internal object state behind public interfaces, preventing unauthorized or invalid external modifications.
+   Properties in C# provide getter ('get') and setter ('set') accessors to read, write, or validate private backing fields.
+   Property Validation: Inside the setter, the implicit 'value' contextual keyword represents the incoming argument. Conditional checks guard against invalid states (such as negative balances).
+   Constructors initialize newly instantiated objects, ensuring initial state compliance.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a C# Console Application.
+   2. Define class 'BankAccount' with private backing fields: 'accountnumber' and 'balance'.
+   3. Create property 'AccountNumber' with standard get and set accessors.
+   4. Create property 'Balance' with validation: if 'value >= 0', set balance; otherwise print error message.
+   5. Provide a parameterized constructor and a 'Display()' method.
+   6. In 'Main()', capture Account Number and Balance from console input.
+   7. Create a 'BankAccount' instance and invoke 'Display()'.
+   8. Build and execute the program.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-03C-Code.cs
+----------------------------------------------------------------------
+using System;
+
+namespace bankaccount
+{
+    class BankAccount
+    {
+        // Private field for account number
+        private string accountnumber;
+
+        // Property for AccountNumber
+        public string AccountNumber
+        {
+            get { return accountnumber; }
+            set { accountnumber = value; }
+        }
+
+        // Private field for balance
+        private double balance;
+
+        // Property with validation
+        public double Balance
+        {
+            get { return balance; }
+            set
+            {
+                if (value >= 0)
+                {
+                    balance = value;
+                }
+                else
+                {
+                    Console.WriteLine("Balance cannot be negative.");
+                }
+            }
+        }
+
+        // Constructor
+        public BankAccount(string accountNumber, double balance)
+        {
+            AccountNumber = accountNumber;
+            Balance = balance;
+        }
+
+        // Method to display account details
+        public void Display()
+        {
+            Console.WriteLine("\nAccount Details");
+            Console.WriteLine("Account Number: " + AccountNumber);
+            Console.WriteLine("Balance: " + Balance);
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Console.Write("Enter Account Number: ");
+            string accNo = Console.ReadLine();
+
+            Console.Write("Enter Balance: ");
+            double bal = Convert.ToDouble(Console.ReadLine());
+
+            BankAccount account = new BankAccount(accNo, bal);
+            account.Display();
+
+            Console.ReadKey();
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. Run: dotnet run
+   2. Enter Account Number: 123456789
+   3. Enter Balance: 5000
+   4. Observe displayed account details.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Enter Account Number: 123456789
+   Enter Balance: 5000
+   
+   Account Details
+   Account Number: 123456789
+   Balance: 5000
+
+8. RESULT:
+   Encapsulation and property validation in C# was successfully implemented and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Backing Field Recursion: Never write 'Balance = value;' inside the 'Balance' property setter; doing so causes infinite recursion and StackOverflowException. Always assign to private backing field 'balance = value;'.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

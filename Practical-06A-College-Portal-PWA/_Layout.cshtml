@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegePortalPWA</title>
+    <!-- Register Web App Manifest -->
+    <link rel="manifest" href="~/manifest.json">
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <!-- Register Service Worker -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+                console.log('Service Worker Registered!', registration);
+            })
+            .catch((error) => {
+                console.log('Service Worker Registration Failed:', error);
+            });
+    }
+    </script>
+</body>
+</html>

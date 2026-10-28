@@ -1,0 +1,128 @@
+================================================================================
+PRACTICAL 05B: DIFFERENT TYPES OF COOKIES (SESSION AND PERSISTENT COOKIES)
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET application demonstrating the creation, storage, and retrieval of Session Cookies (in-memory) and Persistent Cookies (stored on client disk with explicit expiration dates).
+
+2. REQUIREMENTS:
+   * Visual Studio 2019 / 2022 / 2026
+   * .NET Framework 4.7.2 / 4.8
+   * IIS Express web server
+   * Web browser with cookie inspection support
+
+3. THEORY & CONCEPT:
+   An HTTP Cookie is a small packet of state data stored on the client browser and transmitted to the server with every HTTP request.
+   1. Session (Non-Persistent) Cookie: Stored only in browser RAM. It is deleted as soon as the user closes the browser session because no 'Expires' property is defined.
+   2. Persistent Cookie: Contains an explicit expiration date ('Expires = DateTime.Now.AddDays(7)'). It is written to client hard disk storage and survives browser restarts until its expiry timestamp.
+   Cookie APIs:
+     - 'Response.Cookies.Add(HttpCookie)': Transmits 'Set-Cookie' HTTP response headers to the client.
+     - 'Request.Cookies["Key"].Value': Reads incoming 'Cookie' HTTP request headers.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create an ASP.NET Web Application (.NET Framework).
+   2. Add a Web Form named 'CookieDemo.aspx'.
+   3. Place a TextBox (txtName), Save Button (btnSave), Show Button (btnShow), and an output Label (lblOutput).
+   4. In 'btnSave_Click', create a session cookie without expiration and a persistent cookie with 'DateTime.Now.AddDays(7)'. Add both to 'Response.Cookies'.
+   5. In 'btnShow_Click', read values from 'Request.Cookies' and format into 'lblOutput'.
+   6. Run the application, type a username, click 'Save Cookie', then click 'Show Cookies'.
+   7. Restart the browser and test 'Show Cookies' to see persistent cookie retention.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-05B-Code.aspx.cs (CookieDemo.aspx.cs)
+----------------------------------------------------------------------
+using System;
+using System.Web;
+
+namespace CookieApplication
+{
+    public partial class CookieDemo : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+        }
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            // Session Cookie (No expiration date set; deleted when browser closes)
+            HttpCookie sessionCookie = new HttpCookie("SessionUser");
+            sessionCookie.Value = txtName.Text;
+            Response.Cookies.Add(sessionCookie);
+
+            // Persistent Cookie (Expires in 7 days; persisted on client disk)
+            HttpCookie persistentCookie = new HttpCookie("PersistentUser");
+            persistentCookie.Value = txtName.Text;
+            persistentCookie.Expires = DateTime.Now.AddDays(7);
+            Response.Cookies.Add(persistentCookie);
+
+            lblOutput.Text = "Cookies Saved Successfully";
+        }
+
+        protected void btnShow_Click(object sender, EventArgs e)
+        {
+            string sessionData = (Request.Cookies["SessionUser"] != null)
+                ? Request.Cookies["SessionUser"].Value
+                : "No Session Cookie Found";
+
+            string persistentData = (Request.Cookies["PersistentUser"] != null)
+                ? Request.Cookies["PersistentUser"].Value
+                : "No Persistent Cookie Found";
+
+            lblOutput.Text = "Session Cookie: " + sessionData +
+                             "<br/>Persistent Cookie: " + persistentData;
+        }
+    }
+}
+
+----------------------------------------------------------------------
+File: CookieDemo.aspx (Markup)
+----------------------------------------------------------------------
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CookieDemo.aspx.cs" Inherits="CookieApplication.CookieDemo" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>Cookie Demonstration</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <h2>Demonstration of Session and Persistent Cookies</h2>
+        <div>
+            User Name:
+            <asp:TextBox ID="txtName" runat="server" />
+            <br /><br />
+            <asp:Button ID="btnSave" Text="Save Cookie" runat="server" OnClick="btnSave_Click" />
+            &nbsp;&nbsp;
+            <asp:Button ID="btnShow" Text="Show Cookies" runat="server" OnClick="btnShow_Click" />
+            <br /><br />
+            <asp:Label ID="lblOutput" runat="server" Font-Bold="true" ForeColor="Blue" />
+        </div>
+    </form>
+</body>
+</html>
+
+6. HOW TO RUN THE CODE:
+   1. Run in Visual Studio via IIS Express.
+   2. Enter username 'Chaitanya' into the text box.
+   3. Click 'Save Cookie' -> Message 'Cookies Saved Successfully' appears.
+   4. Click 'Show Cookies' -> Both session and persistent cookie values appear.
+   5. Close the browser, reopen the URL, and click 'Show Cookies' to observe persistence.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   After Save Cookie click:
+   Cookies Saved Successfully
+   
+   After Show Cookies click:
+   Session Cookie: Chaitanya
+   Persistent Cookie: Chaitanya
+
+8. RESULT:
+   Session and persistent cookie operations in ASP.NET were successfully implemented and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * NullReferenceException: Always check 'if (Request.Cookies["Name"] != null)' before accessing '.Value' to avoid exceptions if cookies are cleared or expired.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

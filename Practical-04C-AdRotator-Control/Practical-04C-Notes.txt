@@ -1,0 +1,122 @@
+================================================================================
+PRACTICAL 04C: ADROTATOR CONTROL IN ASP.NET WEB FORMS
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Web Forms application implementing the AdRotator server control linked to an XML advertisement schedule file for dynamic banner rotation.
+
+2. REQUIREMENTS:
+   * Visual Studio 2019 / 2022 / 2026
+   * .NET Framework 4.7.2 / 4.8
+   * IIS Express web server
+   * Sample ad banner images (image1.jpg to image5.jpg)
+
+3. THEORY & CONCEPT:
+   The AdRotator control is a specialized ASP.NET server control that displays a sequence of banner advertisements randomly or based on weighted impression frequencies.
+   Advertisement File Structure: An XML file with root element <Advertisements> containing multiple <Ad> records.
+   Elements per <Ad>:
+     - <ImageUrl>: The relative or absolute path to the banner image.
+     - <NavigateUrl>: Target URL opened when the user clicks the banner.
+     - <AlternateText>: Tooltip and fallback text for accessibility.
+     - <Impressions>: A weighting factor indicating relative display probability.
+     - <Keyword>: Category tag used for keyword-based ad filtering via 'KeywordFilter'.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create an ASP.NET Web Application (.NET Framework).
+   2. Right-click project -> Add -> New Item -> XML File. Name it 'XMLFile.xml'.
+   3. Populate 'XMLFile.xml' with five <Ad> definitions containing ImageUrl, NavigateUrl, AlternateText, Impressions, and Keyword.
+   4. Add a Web Form named 'Default.aspx'.
+   5. Insert an <asp:AdRotator> control, setting 'AdvertisementFile="~/XMLFile.xml"'.
+   6. Add an <asp:Button> to trigger postbacks.
+   7. Add placeholder images (image1.jpg to image5.jpg) in the project directory.
+   8. Run the application in IIS Express and click the button or refresh to verify ad rotation.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-04C-Code.aspx (Default.aspx)
+----------------------------------------------------------------------
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebApplicationAd.Default" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>AdRotator Control Demo</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <h2>AdRotator Control Demo</h2>
+        <p>Refresh the page or click the button to see a different advertisement:</p>
+        <div>
+            <asp:AdRotator ID="AdRotator1" runat="server" AdvertisementFile="~/XMLFile.xml"
+                Height="120px" Width="468px" />
+            <br /><br />
+            <asp:Button ID="Button1" runat="server" Text="Show Another Ad" />
+        </div>
+    </form>
+</body>
+</html>
+
+----------------------------------------------------------------------
+File: XMLFile.xml (Advertisement Configuration)
+----------------------------------------------------------------------
+<?xml version="1.0" encoding="utf-8" ?>
+<Advertisements>
+  <Ad>
+    <ImageUrl>image1.jpg</ImageUrl>
+    <NavigateUrl>Default3.aspx</NavigateUrl>
+    <AlternateText>advertisement</AlternateText>
+    <Impressions>1</Impressions>
+    <Keyword>food</Keyword>
+  </Ad>
+  <Ad>
+    <ImageUrl>image2.jpg</ImageUrl>
+    <NavigateUrl>Default3.aspx</NavigateUrl>
+    <AlternateText>advertisement</AlternateText>
+    <Impressions>1</Impressions>
+    <Keyword>food</Keyword>
+  </Ad>
+  <Ad>
+    <ImageUrl>image3.jpg</ImageUrl>
+    <NavigateUrl>https://thebelgianwaffle.co/</NavigateUrl>
+    <AlternateText>advertisement</AlternateText>
+    <Impressions>1</Impressions>
+    <Keyword>food</Keyword>
+  </Ad>
+  <Ad>
+    <ImageUrl>image4.jpg</ImageUrl>
+    <NavigateUrl>https://mcdelivery.co.in/</NavigateUrl>
+    <AlternateText>advertisement</AlternateText>
+    <Impressions>1</Impressions>
+    <Keyword>coffee</Keyword>
+  </Ad>
+  <Ad>
+    <ImageUrl>image5.jpg</ImageUrl>
+    <NavigateUrl>https://www.zomato.com/mumbai/desi-chai-theka-4-vasai</NavigateUrl>
+    <AlternateText>advertisement</AlternateText>
+    <Impressions>1</Impressions>
+    <Keyword>coffee</Keyword>
+  </Ad>
+</Advertisements>
+
+6. HOW TO RUN THE CODE:
+   1. Open the project in Visual Studio.
+   2. Ensure 'XMLFile.xml' and 'Default.aspx' are present.
+   3. Run the application in IIS Express.
+   4. Click 'Show Another Ad' to post back and observe banner rotation.
+   5. Click an ad to navigate to the configured destination URL.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   A banner advertisement appears with configured width and height.
+   Clicking the button or refreshing rotates advertisements randomly among the configured food and coffee ads.
+   Clicking an advertisement opens its corresponding NavigateUrl.
+
+8. RESULT:
+   Dynamic advertisement banner rotation using the ASP.NET AdRotator control was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Missing XML File: Verify 'AdvertisementFile' path begins with '~/' referring to the application root.
+   * Broken Image Icons: Ensure image files exist in the specified folder relative to the web page.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

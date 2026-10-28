@@ -1,0 +1,124 @@
+================================================================================
+PRACTICAL 08B: CREATE A SIMPLE WEB API THAT RETURNS STUDENT DATA IN JSON FORMAT
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Core Web API application containing an API Controller that handles HTTP GET requests and serializes a collection of Student objects into JSON format.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Web API template
+   * Web browser, cURL, or Postman
+
+3. THEORY & CONCEPT:
+   ASP.NET Core Web API is a framework for building HTTP-based RESTful services accessible by diverse clients (browsers, mobile apps, IoT).
+   Key annotations:
+     - '[ApiController]': Enables API-specific behaviors such as automatic model validation responses (400 Bad Request) and automatic parameter inference.
+     - '[Route("api/[controller]")]': Defines route template based on the controller class name without 'Controller' suffix ('/api/student').
+     - '[HttpGet]': Maps action to HTTP GET requests.
+   JSON Content Negotiation: ASP.NET Core uses 'System.Text.Json' by default to automatically serialize C# objects into JSON response payloads with 'Content-Type: application/json'.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Open Visual Studio and create an 'ASP.NET Core Web API' project named 'StudentAPI'.
+   2. In 'Models/Student.cs', define class 'Student' with Id, Name, Course, and Age.
+   3. In 'Controllers/StudentController.cs', create an API controller deriving from 'ControllerBase'.
+   4. Add '[HttpGet] public List<Student> GetStudents()' returning sample student objects (Rahul, Sneha).
+   5. In 'Program.cs', ensure 'builder.Services.AddControllers();' and 'app.MapControllers();' are configured.
+   6. Run the application via 'dotnet run' or F5.
+   7. Navigate to 'https://localhost:<port>/api/student' in a browser or test with Postman/cURL.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-08B-Code.cs (Controllers/StudentController.cs)
+----------------------------------------------------------------------
+using Microsoft.AspNetCore.Mvc;
+using StudentAPI.Models;
+
+namespace StudentAPI.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class StudentController : ControllerBase
+    {
+        [HttpGet]
+        public List<Student> GetStudents()
+        {
+            return new List<Student>
+            {
+                new Student
+                {
+                    Id = 1,
+                    Name = "Rahul",
+                    Course = "BSc IT",
+                    Age = 20
+                },
+                new Student
+                {
+                    Id = 2,
+                    Name = "Sneha",
+                    Course = "BCA",
+                    Age = 21
+                }
+            };
+        }
+    }
+}
+
+----------------------------------------------------------------------
+File: Student.cs (Models/Student.cs)
+----------------------------------------------------------------------
+namespace StudentAPI.Models
+{
+    public class Student
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Course { get; set; } = "";
+        public int Age { get; set; }
+    }
+}
+
+----------------------------------------------------------------------
+File: Program.cs (Startup Configuration)
+----------------------------------------------------------------------
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.MapControllers();
+
+app.Run();
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Open browser or Postman at: https://localhost:<port>/api/student
+   3. View formatted JSON array containing Rahul and Sneha records.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   [
+     {
+       "id": 1,
+       "name": "Rahul",
+       "course": "BSc IT",
+       "age": 20
+     },
+     {
+       "id": 2,
+       "name": "Sneha",
+       "course": "BCA",
+       "age": 21
+     }
+   ]
+
+8. RESULT:
+   ASP.NET Core Web API returning student data in JSON format was successfully implemented and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * ControllerBase vs Controller: Web API controllers should derive from 'ControllerBase' rather than 'Controller' since Web APIs do not require Razor view support.
+   * Property casing: 'System.Text.Json' serializes property names in camelCase by default in JSON payloads.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

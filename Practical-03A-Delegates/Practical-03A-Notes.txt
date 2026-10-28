@@ -1,0 +1,112 @@
+================================================================================
+PRACTICAL 03A: ARITHMETIC METHODS VIA C# DELEGATES
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# program demonstrating delegates to invoke arithmetic methods (Add, Subtract, Multiply, Divide) dynamically.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux
+
+3. THEORY & CONCEPT:
+   A delegate in C# is a type-safe function pointer referencing methods matching a defined signature and return type.
+   Delegates are objects that encapsulate method references, enabling methods to be passed as parameters and invoked dynamically.
+   Delegate instantiation: 'ArithmeticOperation op = Add;' binds the delegate variable 'op' to the static method 'Add'. Invoking 'op(num1, num2)' executes 'Add(num1, num2)'.
+   Delegates serve as the foundational architecture for event-driven programming, LINQ, and callback routines in .NET.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a C# Console Application.
+   2. Declare delegate: 'delegate double ArithmeticOperation(double a, double b);'.
+   3. Implement static methods: Add, Subtract, Multiply, and Divide with division-by-zero check.
+   4. In 'Main()', read two numbers from console input.
+   5. Assign the delegate reference successively to Add, Subtract, Multiply, and Divide, invoking the delegate each time.
+   6. Print each computed result.
+   7. Build and execute the program.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-03A-Code.cs
+----------------------------------------------------------------------
+using System;
+
+namespace caldelegate
+{
+    delegate double ArithmeticOperation(double a, double b);
+
+    class Calculator
+    {
+        public static double Add(double a, double b)
+        {
+            return a + b;
+        }
+
+        public static double Subtract(double a, double b)
+        {
+            return a - b;
+        }
+
+        public static double Multiply(double a, double b)
+        {
+            return a * b;
+        }
+
+        public static double Divide(double a, double b)
+        {
+            if (b == 0)
+            {
+                Console.WriteLine("Division by zero is not possible.");
+                return 0;
+            }
+            return a / b;
+        }
+
+        static void Main(string[] args)
+        {
+            Console.Write("Enter First Number: ");
+            double num1 = Convert.ToDouble(Console.ReadLine());
+
+            Console.Write("Enter Second Number: ");
+            double num2 = Convert.ToDouble(Console.ReadLine());
+
+            ArithmeticOperation op;
+
+            op = Add;
+            Console.WriteLine("Addition = " + op(num1, num2));
+
+            op = Subtract;
+            Console.WriteLine("Subtraction = " + op(num1, num2));
+
+            op = Multiply;
+            Console.WriteLine("Multiplication = " + op(num1, num2));
+
+            op = Divide;
+            Console.WriteLine("Division = " + op(num1, num2));
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Enter First Number: 300
+   3. Enter Second Number: 200
+   4. Review addition, subtraction, multiplication, and division outputs.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Enter First Number: 300
+   Enter Second Number: 200
+   Addition = 500
+   Subtraction = 100
+   Multiplication = 60000
+   Division = 1.5
+
+8. RESULT:
+   Dynamic method invocation using C# delegates was successfully implemented and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Signature Mismatch: A delegate cannot point to a method whose parameters or return type differ from the delegate declaration.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

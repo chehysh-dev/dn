@@ -1,0 +1,142 @@
+================================================================================
+PRACTICAL 04A: STUDENT REGISTRATION FORM IN ASP.NET WEB FORMS
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Web Forms application that creates a Student Registration form using standard server controls (TextBox, RadioButton, DropDownList, Calendar, CheckBox, and Button) and renders captured registration data.
+
+2. REQUIREMENTS:
+   * Visual Studio 2019 / 2022 / 2026 with ASP.NET and Web Development workload
+   * .NET Framework 4.7.2 / 4.8
+   * IIS Express web server
+   * Web browser (Google Chrome, Microsoft Edge, or Firefox)
+
+3. THEORY & CONCEPT:
+   ASP.NET Web Forms is a component-based web application model that abstracts HTTP statelessness using an event-driven, server-side control architecture.
+   Server Controls: Elements declared with 'runat="server"' (e.g. <asp:TextBox>, <asp:DropDownList>, <asp:Calendar>) maintain state across postbacks via ViewState.
+   Code-Behind Model: Markup is stored in '.aspx' files, while business logic and event handlers reside in corresponding '.aspx.cs' partial classes.
+   PostBack Mechanism: When the user clicks the Submit button, the form posts data back to the server, firing server-side event handlers such as 'btnSubmit_Click()'.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Open Visual Studio.
+   2. Click File -> New -> Project.
+   3. Select 'ASP.NET Web Application (.NET Framework)' and click Next.
+   4. Name the project 'WebApplication1', select .NET Framework 4.7.2, and click Create.
+   5. Choose 'Empty' template, check the 'Web Forms' reference box, and click Create.
+   6. In Solution Explorer, right-click the project -> Add -> Web Form. Name it 'WebForm1.aspx'.
+   7. Open 'WebForm1.aspx' and add the server control markup for Name, Gender, Course, DOB Calendar, and Terms CheckBox.
+   8. Open 'WebForm1.aspx.cs' and write the 'btnSubmit_Click' handler to extract inputs and check the terms agreement.
+   9. Press F5 or click Run with IIS Express.
+   10. Fill in the form, select a date on the calendar, accept terms, and click Submit.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-04A-Code.aspx (WebForm1.aspx)
+----------------------------------------------------------------------
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="WebApplication1.WebForm1" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>Student Registration Form</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <h2>Student Registration Form</h2>
+            <hr />
+        </div>
+        <asp:Label Text="Student Name:" runat="server" />
+        <asp:TextBox ID="txtName" runat="server" Width="200px" /><br />
+
+        <asp:Label Text="Gender:" runat="server" /><br />
+        <asp:RadioButton ID="rbMale" GroupName="gender" Text="Male" runat="server" />
+        <asp:RadioButton ID="rbFemale" GroupName="gender" Text="Female" runat="server" /><br />
+
+        <asp:Label Text="Course:" runat="server" />
+        <asp:DropDownList ID="ddlCourse" runat="server">
+            <asp:ListItem Text="Select Course" Value="" />
+            <asp:ListItem Text="BSc IT" Value="BSc IT" />
+            <asp:ListItem Text="BSc CS" Value="BSc CS" />
+            <asp:ListItem Text="BCA" Value="BCA" />
+        </asp:DropDownList><br />
+
+        <asp:Label Text="Date of Birth:" runat="server" />
+        <asp:Calendar ID="calDOB" runat="server" /><br />
+
+        <asp:CheckBox ID="chkTerms" runat="server" Text="I accept Terms and Conditions" /><br />
+
+        <asp:Button ID="btnSubmit" runat="server" OnClick="btnSubmit_Click" Text="Submit" />
+        &nbsp;&nbsp;
+        <asp:Button ID="btnClear" runat="server" Text="Clear" />
+        <br /><br />
+        <asp:Label ID="lblOutput" runat="server" ForeColor="Green" Font-Bold="true" />
+    </form>
+</body>
+</html>
+
+----------------------------------------------------------------------
+File: WebForm1.aspx.cs (Code-Behind)
+----------------------------------------------------------------------
+using System;
+
+namespace WebApplication1
+{
+    public partial class WebForm1 : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+        }
+
+        protected void btnSubmit_Click(object sender, EventArgs e)
+        {
+            string gender = "";
+            if (rbMale.Checked)
+            {
+                gender = rbMale.Text;
+            }
+            else if (rbFemale.Checked)
+            {
+                gender = rbFemale.Text;
+            }
+
+            if (chkTerms.Checked)
+            {
+                lblOutput.Text = "Student Name: " + txtName.Text + "<br/>Gender: " +
+                    gender + "<br/>Course: " + ddlCourse.SelectedValue +
+                    "<br/>Date: " + calDOB.SelectedDate.ToShortDateString();
+            }
+            else
+            {
+                lblOutput.Text = "Please accept terms & conditions";
+            }
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. Open the project in Visual Studio.
+   2. Right-click 'WebForm1.aspx' in Solution Explorer and select 'Set As Start Page'.
+   3. Press F5 (or Ctrl + F5) to run the application in IIS Express.
+   4. Enter student name, choose Gender, pick a course from the dropdown, select a date from the calendar, check the terms box, and click Submit.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Initial Screen: Displays student registration form with text fields, radio buttons, dropdown list, calendar widget, and submit button.
+   Upon submission (with Terms accepted):
+   Student Name: John Doe
+   Gender: Male
+   Course: BSc IT
+   Date: 15/10/2004
+   If terms are not accepted:
+   Please accept terms & conditions
+
+8. RESULT:
+   Student Registration Form using ASP.NET Web Forms server controls was successfully created and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Runat Server requirement: All ASP.NET server controls must be located within a <form runat="server"> tag.
+   * Calendar default date: SelectedDate defaults to DateTime.MinValue (01/01/0001) if no date is clicked on the calendar.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

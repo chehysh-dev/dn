@@ -1,0 +1,124 @@
+================================================================================
+PRACTICAL 06B: CREATE A PWA THAT DISPLAYS A CUSTOM OFFLINE PAGE
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Core MVC PWA that precaches an offline fallback page using the Cache API in a Service Worker and displays 'offline.html' whenever network connectivity is lost.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Web App (Model-View-Controller) template
+   * Google Chrome / Microsoft Edge DevTools with Network throttling
+   * Icons: icon1.png (192x192), icon2.png (512x512)
+
+3. THEORY & CONCEPT:
+   Offline caching is a key pillar of Progressive Web Apps, guaranteeing user availability even during complete network disconnection.
+   Cache API ('caches.open()', 'cache.addAll()'): Stores HTTP request/response pairs persistently in the browser's origin cache storage during the Service Worker 'install' event.
+   Network Fallback Strategy: The Service Worker intercepts all network requests via 'fetch'. If 'fetch(event.request)' rejects (due to no internet connectivity), the catch handler gracefully returns the precached '/offline.html' response.
+   Event.respondWith(): Hijacks the browser's default network pipeline and supplies a custom synthetic or cached Response object.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create an ASP.NET Core MVC project named 'OfflinePWA'.
+   2. In 'Views/Home/Index.cshtml', display VARTAK College portal content supporting offline mode.
+   3. In 'wwwroot/', create 'offline.html' containing 'No Internet Connection' user notice.
+   4. In 'wwwroot/', create 'manifest.json' with app details and icon references.
+   5. In 'wwwroot/', create 'service-worker.js' with 'offline-cache-v1' caching '/' and '/offline.html'.
+   6. Implement 'fetch' listener returning 'caches.match("/offline.html")' on network failure.
+   7. In 'Views/Shared/_Layout.cshtml', link 'manifest.json' and register 'service-worker.js'.
+   8. Run the application, open Chrome DevTools -> Application -> Cache Storage to verify cached resources.
+   9. In DevTools -> Network tab, check 'Offline', refresh page, and observe the custom offline page.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-06B-Code.js (wwwroot/service-worker.js)
+----------------------------------------------------------------------
+const CACHE_NAME = "offline-cache-v1";
+const urlsToCache = ["/", "/offline.html"];
+
+self.addEventListener("install", event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(urlsToCache);
+        })
+    );
+});
+
+self.addEventListener("fetch", event => {
+    event.respondWith(
+        fetch(event.request).catch(() => {
+            return caches.match("/offline.html");
+        })
+    );
+});
+
+----------------------------------------------------------------------
+File: offline.html (wwwroot/offline.html)
+----------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Offline</title>
+</head>
+<body>
+    <h1>No Internet Connection</h1>
+    <h3>Please check your internet connection.</h3>
+</body>
+</html>
+
+----------------------------------------------------------------------
+File: manifest.json (wwwroot/manifest.json)
+----------------------------------------------------------------------
+{
+  "name": "Offline PWA",
+  "short_name": "OfflinePWA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "white",
+  "theme_color": "blue",
+  "icons": [
+    {
+      "src": "/icons/icon1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+----------------------------------------------------------------------
+File: Index.cshtml (Views/Home/Index.cshtml)
+----------------------------------------------------------------------
+<div class="text-center">
+    <h1>VARTAK College Information Portal</h1>
+    <h3>Welcome to VARTAK College</h3>
+    <p>This website supports Offline Mode.</p>
+</div>
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Open Chrome at https://localhost:<port>/
+   3. Open DevTools (F12) -> Network tab.
+   4. Change 'No throttling' dropdown to 'Offline'.
+   5. Press Ctrl + R (or F5) to reload the webpage.
+   6. Verify the custom 'offline.html' page is displayed instead of the default browser dinosaur/error page.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Online State: Displays VARTAK College Information Portal homepage.
+   Offline State (when network is toggled to Offline):
+   Header: No Internet Connection
+   Body: Please check your internet connection.
+
+8. RESULT:
+   PWA with custom offline page caching via Service Worker was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Initial Cache Miss: The application must be loaded at least once with network access so the Service Worker can install and cache 'offline.html'.
+   * Cache Invalidation: When updating 'offline.html', increment CACHE_NAME to 'offline-cache-v2' to trigger cache update.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

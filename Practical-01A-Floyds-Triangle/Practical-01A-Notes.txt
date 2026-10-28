@@ -1,0 +1,83 @@
+================================================================================
+PRACTICAL 01A: FLOYD'S TRIANGLE TILL N ROWS IN C#
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# Console Application that prints Floyd's Triangle up to N user-specified rows using sequential integer progression.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux with terminal access
+
+3. THEORY & CONCEPT:
+   Floyd's Triangle is a right-angled triangular array of natural numbers. It begins with 1 at the top-left and fills consecutive natural numbers in subsequent rows.
+   The number of elements in row 'i' equals 'i'. For N rows, the total number of printed integers is N*(N+1)/2.
+   The algorithm utilizes nested loops: the outer loop controls the row index from 1 to N, while the inner loop iterates from 1 to the current row index, printing and incrementing a continuous counter variable.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Open Visual Studio or terminal.
+   2. Create a new C# Console Application named 'prac1a' via 'dotnet new console -n prac1a'.
+   3. Open 'Program.cs' and write the Floyd's Triangle logic with nested 'for' loops.
+   4. Prompt the user to enter the number of rows 'n'.
+   5. Parse the console input into an integer using 'int.Parse()'.
+   6. Execute nested iterations, printing 'num' followed by a space and advancing to a new line after each row.
+   7. Build the application using 'dotnet build'.
+   8. Run the program via 'dotnet run' and supply a test row count (e.g., 5).
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-01A-Code.cs
+----------------------------------------------------------------------
+using System;
+
+namespace prac1a
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Floyds triangle");
+            Console.Write("Enter the number of rows: ");
+            int n = int.Parse(Console.ReadLine());
+            int num = 1;
+
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= i; j++)
+                {
+                    Console.Write(num + " ");
+                    num++;
+                }
+                Console.WriteLine();
+            }
+            Console.ReadKey();
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. Open terminal and navigate to the project folder.
+   2. Run the command: dotnet run
+   3. Enter the number of rows (e.g., 5).
+   4. Observe the triangular number output.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Floyds triangle
+   Enter the number of rows: 5
+   1 
+   2 3 
+   4 5 6 
+   7 8 9 10 
+   11 12 13 14 15 
+
+8. RESULT:
+   Floyd's Triangle generation program in C# was successfully implemented and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * FormatException: Ensure valid numeric input is provided to avoid unhandled parsing exceptions.
+   * Console.ReadKey(): On non-interactive terminal execution or redirect pipes, Console.ReadKey() may throw InvalidOperationException; it can be commented out for automated runs.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

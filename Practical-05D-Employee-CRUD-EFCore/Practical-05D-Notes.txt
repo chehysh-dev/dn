@@ -1,0 +1,145 @@
+================================================================================
+PRACTICAL 05D: CRUD OPERATIONS ON EMPLOYEE TABLE USING ENTITY FRAMEWORK CORE
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Core MVC application that performs Create, Read, Update, and Delete (CRUD) database operations on an Employee entity using Entity Framework Core Code-First and SQL Server.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * SQL Server LocalDB / SQL Server Express
+   * NuGet Packages: Microsoft.EntityFrameworkCore.SqlServer, Microsoft.EntityFrameworkCore.Tools, Microsoft.EntityFrameworkCore.Design
+   * Web browser
+
+3. THEORY & CONCEPT:
+   Entity Framework Core (EF Core) is a lightweight, extensible, cross-platform Object-Relational Mapper (ORM) for .NET.
+   Code-First Workflow: Developers write standard C# POCO classes ('Employee.cs') and a 'DbContext' ('AppDbContext.cs'). EF Core automatically translates these models into relational database schemas via migrations.
+   CRUD Architecture:
+     - Create: 'db.Employees.Add(employee); await db.SaveChangesAsync();'
+     - Read: 'await db.Employees.ToListAsync();' and 'await db.Employees.FindAsync(id);'
+     - Update: 'db.Employees.Update(employee); await db.SaveChangesAsync();'
+     - Delete: 'db.Employees.Remove(employee); await db.SaveChangesAsync();'
+   Scaffolding: Visual Studio's code generator can automatically generate full MVC controllers and Razor views (Index, Details, Create, Edit, Delete) from an entity model and DbContext.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a new ASP.NET Core MVC project named 'EmployeeCRUD'.
+   2. Install EF Core NuGet packages: 'Microsoft.EntityFrameworkCore.SqlServer' and 'Microsoft.EntityFrameworkCore.Tools'.
+   3. In 'Models/Employee.cs', define the Employee entity with Id, Name, Department, and Salary.
+   4. In 'Data/AppDbContext.cs', create DbContext exposing 'DbSet<Employee> Employees'.
+   5. In 'appsettings.json', configure SQL Server LocalDB connection string 'MyConnection'.
+   6. In 'Program.cs', register 'AppDbContext' using 'builder.Services.AddDbContext<AppDbContext>()'.
+   7. Build the project.
+   8. In Solution Explorer, right-click Controllers -> Add -> New Scaffolded Item -> 'MVC Controller with views, using Entity Framework'. Select Employee model and AppDbContext.
+   9. In Package Manager Console, run: 'Add-Migration InitialCreate' then 'Update-Database'.
+   10. Run the application and navigate to '/Employees'. Test Create, Read, Update, and Delete actions.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-05D-Code.cs (Data/AppDbContext.cs)
+----------------------------------------------------------------------
+using EmployeeCRUD.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace EmployeeCRUD.Data
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Employee> Employees { get; set; }
+    }
+}
+
+----------------------------------------------------------------------
+File: Employee.cs (Models/Employee.cs)
+----------------------------------------------------------------------
+namespace EmployeeCRUD.Models
+{
+    public class Employee
+    {
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public required string Department { get; set; }
+        public double Salary { get; set; }
+    }
+}
+
+----------------------------------------------------------------------
+File: Program.cs (Startup Configuration)
+----------------------------------------------------------------------
+using EmployeeCRUD.Data;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("MyConnection")));
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
+
+----------------------------------------------------------------------
+File: appsettings.json (Connection String)
+----------------------------------------------------------------------
+{
+  "ConnectionStrings": {
+    "MyConnection": "Server=(localdb)\\MSSQLLocalDB;Database=EmployeeDB;Trusted_Connection=True;TrustServerCertificate=True"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Navigate to https://localhost:<port>/Employees
+   3. Click 'Create New', enter Name='John', Department='IT', Salary=75000, and save.
+   4. Click 'Edit' to update department to 'Cloud Engineering'.
+   5. Click 'Details' to view individual employee record.
+   6. Click 'Delete' and confirm to delete the record.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Employees List Page (/Employees):
+   Displays table of employee records with columns: Name, Department, Salary, Actions (Edit | Details | Delete).
+   Create New Employee: Inserts row into SQL Server EmployeeDB table.
+   Edit: Updates row details in database.
+   Delete: Removes row from database.
+
+8. RESULT:
+   Employee CRUD web application using Entity Framework Core and SQL Server was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * SQL Server LocalDB: If LocalDB is not installed, update connection string to point to SQL Server Express: 'Server=.\SQLEXPRESS;Database=EmployeeDB;Trusted_Connection=True;TrustServerCertificate=True'.
+   * Pending Migrations: Always run 'Update-Database' after creating a migration to ensure the SQL schema matches C# models.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

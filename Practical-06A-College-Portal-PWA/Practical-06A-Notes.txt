@@ -1,0 +1,144 @@
+================================================================================
+PRACTICAL 06A: COLLEGE INFORMATION PORTAL AS A PROGRESSIVE WEB APPLICATION (PWA)
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Core MVC application representing a College Information Portal and convert it into an installable Progressive Web Application (PWA) using a Web App Manifest and Service Worker registration.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Web App (Model-View-Controller) template
+   * Google Chrome / Microsoft Edge with PWA installation support
+   * PWA Icons (icon1.png: 192x192, icon2.png: 512x512)
+
+3. THEORY & CONCEPT:
+   A Progressive Web Application (PWA) utilizes modern web capabilities to deliver an app-like experience across desktop and mobile devices.
+   Web App Manifest ('manifest.json'): A JSON metadata file that configures how the application appears to the user when installed on their home screen or desktop (name, start URL, standalone display mode, background/theme colors, and app icons).
+   Service Worker ('service-worker.js'): A background client script that runs independently from the webpage, intercepting network requests and handling caching and lifecycle events ('install', 'fetch', 'activate').
+   Static Files Middleware: 'app.UseStaticFiles()' serves static assets (manifest, service worker, icons) directly from the 'wwwroot' folder.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Open Visual Studio and create an 'ASP.NET Core Web App (Model-View-Controller)' named 'CollegePortalPWA'.
+   2. In 'Views/Home/Index.cshtml', update the homepage content to display Vartak College information, courses offered, and contact details.
+   3. In 'wwwroot/', create 'service-worker.js' listening for 'install' and 'fetch' events.
+   4. In 'wwwroot/', create 'manifest.json' defining name, standalone display mode, theme colors, and icons.
+   5. Create folder 'wwwroot/icons/' and add 'icon1.png' (192x192) and 'icon2.png' (512x512).
+   6. In 'Views/Shared/_Layout.cshtml', add '<link rel="manifest" href="~/manifest.json">' in <head> and add the Service Worker registration script before </body>.
+   7. Ensure 'app.UseStaticFiles();' is enabled in 'Program.cs'.
+   8. Run the application over HTTPS or localhost.
+   9. Open Chrome DevTools (F12) -> Application tab -> verify Manifest properties and Service Worker status.
+   10. Observe the PWA Install icon in the browser address bar and test installation.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-06A-Code.js (wwwroot/service-worker.js)
+----------------------------------------------------------------------
+self.addEventListener('install', function (event) {
+    console.log('Service Worker Installed');
+});
+
+self.addEventListener('fetch', function (event) {
+    console.log('Fetching:', event.request.url);
+});
+
+----------------------------------------------------------------------
+File: manifest.json (wwwroot/manifest.json)
+----------------------------------------------------------------------
+{
+  "name": "Vartak College Information Portal",
+  "short_name": "CollegePortal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "white",
+  "theme_color": "blue",
+  "icons": [
+    {
+      "src": "/icons/icon1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+----------------------------------------------------------------------
+File: Index.cshtml (Views/Home/Index.cshtml)
+----------------------------------------------------------------------
+<div class="text-center">
+    <h1>Vartak College Information Portal</h1>
+    <h3>Welcome to Vartak College</h3>
+    <p>Courses Offered:</p>
+    <ul>
+        <li>BSC IT</li>
+        <li>BSC CS</li>
+        <li>BSC DS</li>
+    </ul>
+    <p>Contact: 9818763456</p>
+</div>
+
+----------------------------------------------------------------------
+File: _Layout.cshtml (Views/Shared/_Layout.cshtml)
+----------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegePortalPWA</title>
+    <!-- Register Web App Manifest -->
+    <link rel="manifest" href="~/manifest.json">
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <!-- Register Service Worker -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+                console.log('Service Worker Registered!', registration);
+            })
+            .catch((error) => {
+                console.log('Service Worker Registration Failed:', error);
+            });
+    }
+    </script>
+</body>
+</html>
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Open Google Chrome at https://localhost:<port>/
+   3. Press F12 to open DevTools -> Navigate to 'Application' tab.
+   4. Under 'Application' -> 'Manifest', verify Portal Name, Start URL, and Icons.
+   5. Under 'Application' -> 'Service Workers', verify 'service-worker.js' is activated.
+   6. Click the 'Install' icon in Chrome's address bar to install the web app to desktop.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Homepage displays:
+   Vartak College Information Portal
+   Welcome to Vartak College
+   Courses Offered: BSC IT, BSC CS, BSC DS
+   Contact: 9818763456
+   
+   DevTools Console Output:
+   Service Worker Registered! ServiceWorkerRegistration { ... }
+   Service Worker Installed
+   Fetching: https://localhost:7000/
+
+8. RESULT:
+   College Information Portal PWA with Web App Manifest and Service Worker was successfully created and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * HTTPS or Localhost requirement: Service Workers and PWA installation require a secure context (HTTPS or localhost).
+   * Manifest MIME type: Ensure static file serving is active via 'app.UseStaticFiles()' so 'manifest.json' is delivered with 'application/manifest+json' or 'application/json'.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

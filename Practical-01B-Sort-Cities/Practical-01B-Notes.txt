@@ -1,0 +1,103 @@
+================================================================================
+PRACTICAL 01B: ARRANGE NAMES OF CITIES IN SORTED ORDER
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# Console Application that accepts names of 10 cities into an array and arranges them in alphabetical ascending order using Array.Sort().
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux
+
+3. THEORY & CONCEPT:
+   Arrays in C# are fixed-size sequential collections of elements of the same data type. A single-dimensional array of strings stores textual entries.
+   The 'System.Array' class provides static utility methods for manipulating array data.
+   'Array.Sort(Array)' employs the Introsort algorithm (an adaptive hybrid of Quicksort, Heapsort, and Insertion Sort) with O(n log n) average complexity, sorting string elements lexicographically according to current culture rules.
+   The 'foreach' statement enumerates elements sequentially without requiring index bookkeeping.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a new C# Console Application named 'SortCities'.
+   2. Declare a string array of size 10: 'string[] cities = new string[10];'.
+   3. Use a 'for' loop to read 10 city names from the console using 'Console.ReadLine()'.
+   4. Call 'Array.Sort(cities);' to sort array contents in place.
+   5. Use a 'foreach' loop to display the sorted city names.
+   6. Build and run the project.
+   7. Input 10 diverse city names and verify alphabetical order in the output.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-01B-Code.cs
+----------------------------------------------------------------------
+using System;
+
+namespace SortCities
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string[] cities = new string[10];
+
+            Console.WriteLine("=== City Name Sorter ===");
+            Console.WriteLine("Enter names of 10 cities:");
+
+            for (int i = 0; i < 10; i++)
+            {
+                cities[i] = Console.ReadLine();
+            }
+
+            // Sort array using Array.Sort()
+            Array.Sort(cities);
+            Console.WriteLine("\n--- Cities in Sorted Order ---");
+
+            foreach (string i in cities)
+            {
+                Console.WriteLine(i);
+            }
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. Open terminal in the project directory.
+   2. Execute: dotnet run
+   3. Enter 10 city names sequentially.
+   4. Inspect the output list sorted in alphabetical order.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   === City Name Sorter ===
+   Enter names of 10 cities:
+   delhi
+   chennai
+   surat
+   jaipur
+   mumbai
+   pune
+   bangalore
+   hyderabad
+   kolkata
+   ahmedabad
+   
+   --- Cities in Sorted Order ---
+   ahmedabad
+   bangalore
+   chennai
+   delhi
+   hyderabad
+   jaipur
+   kolkata
+   mumbai
+   pune
+   surat
+
+8. RESULT:
+   City name alphabetical sorting application in C# was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Case Sensitivity: By default, Array.Sort() uses current culture case comparisons. Use StringComparer.OrdinalIgnoreCase if case-insensitive order is required.
+   * Null Values: Entering empty lines assigns empty strings which sort before alphanumeric characters.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

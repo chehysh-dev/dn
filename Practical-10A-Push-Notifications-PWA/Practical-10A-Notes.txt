@@ -1,0 +1,142 @@
+================================================================================
+PRACTICAL 10A: CREATE A PWA WITH A WEB APP MANIFEST AND IMPLEMENT PUSH NOTIFICATIONS
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a Progressive Web Application (PWA) with a Web App Manifest and implement browser notification capabilities via Service Worker registration and the Notification API.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Empty Web App template
+   * Google Chrome / Microsoft Edge with Notification permissions enabled
+   * Icons: icon1.png (192x192) and icon2.png (512x512)
+
+3. THEORY & CONCEPT:
+   Web Notifications API allows web applications to display system-level alerts and notifications outside of the immediate webpage viewport.
+   Notification Permission Workflow: Before displaying notifications, the application must request permission from the user: 'Notification.requestPermission()'. Possible states are 'granted', 'denied', or 'default'.
+   Service Worker Notifications: Once granted, 'registration.showNotification(title, options)' creates a persistent notification linked to the Service Worker registration with custom body text and icon graphics.
+   PWA Integration: Combining notifications with a Web App Manifest allows installed PWAs to deliver engaging mobile and desktop alert experiences.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create an ASP.NET Core project named 'PushNotification'.
+   2. In 'Program.cs', add 'app.UseDefaultFiles();' and 'app.UseStaticFiles();'.
+   3. In 'wwwroot/', create 'manifest.json' defining app metadata, theme color (#0d6efd), and icons.
+   4. Create 'wwwroot/icons/' containing 'icon1.png' and 'icon2.png'.
+   5. In 'wwwroot/', create 'index.html' with a 'Show Notification' button and link to 'manifest.json' and 'app.js'.
+   6. In 'wwwroot/', create 'service-worker.js' handling 'install' and 'activate' events.
+   7. In 'wwwroot/', create 'app.js' registering the Service Worker and defining 'showNotification()' to request permission and display the alert.
+   8. Run the application via 'dotnet run'.
+   9. Click 'Show Notification', grant permission when prompted by Chrome, and observe the OS notification popup.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-10A-Code.js (wwwroot/app.js)
+----------------------------------------------------------------------
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker Registered'));
+}
+
+function showNotification() {
+    Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification('PWA Notification', {
+                    body: 'Push Notification Working Successfully!',
+                    icon: 'icons/icon1.png'
+                });
+            });
+        }
+    });
+}
+
+----------------------------------------------------------------------
+File: service-worker.js (wwwroot/service-worker.js)
+----------------------------------------------------------------------
+self.addEventListener('install', event => {
+    console.log('Service Worker Installed');
+});
+
+self.addEventListener('activate', event => {
+    console.log('Service Worker Activated');
+});
+
+----------------------------------------------------------------------
+File: index.html (wwwroot/index.html)
+----------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My PWA</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+</head>
+<body>
+    <h1>My Progressive Web App</h1>
+    <button onclick="showNotification()">Show Notification</button>
+    <script src="app.js"></script>
+</body>
+</html>
+
+----------------------------------------------------------------------
+File: manifest.json (wwwroot/manifest.json)
+----------------------------------------------------------------------
+{
+  "name": "My PWA Application",
+  "short_name": "MyPWA",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d6efd",
+  "icons": [
+    {
+      "src": "icons/icon1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+----------------------------------------------------------------------
+File: Program.cs (Startup Configuration)
+----------------------------------------------------------------------
+var builder = WebApplication.CreateBuilder(args);
+
+var app = builder.Build();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.Run();
+
+6. HOW TO RUN THE CODE:
+   1. In terminal: dotnet run
+   2. Open Chrome at https://localhost:<port>/
+   3. Click 'Show Notification' button.
+   4. When prompted 'Show notifications? Click Allow'.
+   5. Observe the desktop notification popup with title 'PWA Notification' and message 'Push Notification Working Successfully!'.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Webpage:
+   My Progressive Web App
+   [ Show Notification Button ]
+   
+   System Notification Popup:
+   Title: PWA Notification
+   Body: Push Notification Working Successfully!
+   Icon: (icon1.png)
+
+8. RESULT:
+   PWA with Web App Manifest and Service Worker notifications was successfully created and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Permission Blocked: If the user previously clicked 'Block', 'requestPermission()' automatically resolves to 'denied' without showing the browser prompt. Reset permissions in Chrome Site Settings (click padlock icon next to URL).
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

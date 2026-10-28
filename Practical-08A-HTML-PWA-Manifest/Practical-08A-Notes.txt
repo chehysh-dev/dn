@@ -1,0 +1,110 @@
+================================================================================
+PRACTICAL 08A: PWA APPLICATION WITH AN HTML STARTING PAGE LINKING TO MANIFEST
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a basic Progressive Web Application (PWA) using an ASP.NET Core web server serving a static starting HTML page with a direct link to manifest.json and responsive viewport configuration.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Empty Web App or MVC template
+   * Web browser with PWA inspection tools
+   * Icons: icon1.png (192x192) and icon2.png (512x512)
+
+3. THEORY & CONCEPT:
+   A PWA starting page must establish progressive metadata early in the document <head> via standard HTML tags.
+   Key Elements:
+     - '<meta name="viewport" content="width=device-width, initial-scale=1">': Ensures responsive viewport scaling on mobile screens.
+     - '<link rel="manifest" href="manifest.json">': Links the Web App Manifest defining installation metadata.
+   Minimal Static Web Server: In ASP.NET Core, 'app.UseDefaultFiles()' automatically routes '/' requests to 'index.html', while 'app.UseStaticFiles()' serves the files from 'wwwroot/' without requiring controllers.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create an ASP.NET Core project named 'BasicPWA'.
+   2. In 'Program.cs', configure 'app.UseDefaultFiles();' and 'app.UseStaticFiles();'.
+   3. In 'wwwroot/', create 'index.html' with viewport meta tag and '<link rel="manifest" href="manifest.json">'.
+   4. In 'wwwroot/', create 'manifest.json' specifying name, description, start_url ('/index.html'), and icons.
+   5. Create 'wwwroot/icons/' containing 'icon1.png' and 'icon2.png'.
+   6. Run the application via 'dotnet run'.
+   7. Navigate to 'https://localhost:<port>/' or '/index.html' in Chrome.
+   8. Open DevTools -> Application -> Manifest to confirm manifest values are parsed.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-08A-Code.html (wwwroot/index.html)
+----------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic PWA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <h1>My Progressive Web Application</h1>
+    <p>This is the starting page of PWA.</p>
+</body>
+</html>
+
+----------------------------------------------------------------------
+File: manifest.json (wwwroot/manifest.json)
+----------------------------------------------------------------------
+{
+  "name": "Basic Progressive Web Application",
+  "short_name": "BasicPWA",
+  "description": "Simple Example",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "white",
+  "theme_color": "blue",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+----------------------------------------------------------------------
+File: Program.cs (Minimal Web Server)
+----------------------------------------------------------------------
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.Run();
+
+6. HOW TO RUN THE CODE:
+   1. Run: dotnet run
+   2. Open Chrome at https://localhost:<port>/index.html
+   3. View the starting PWA page.
+   4. Press F12 -> Application -> Manifest -> Verify name 'Basic Progressive Web Application' and display mode 'standalone'.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Browser Screen:
+   My Progressive Web Application
+   This is the starting page of PWA.
+   
+   Manifest Verification (DevTools):
+   Name: Basic Progressive Web Application
+   Short Name: BasicPWA
+   Start URL: /index.html
+   Display: standalone
+
+8. RESULT:
+   PWA application with HTML starting page linking to manifest.json was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Middleware order: 'app.UseDefaultFiles()' must precede 'app.UseStaticFiles()' in Program.cs so that default file mapping occurs before static file resolution.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

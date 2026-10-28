@@ -1,0 +1,98 @@
+================================================================================
+PRACTICAL 03B: MULTICAST DELEGATE IN C#
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop a C# program demonstrating multicast delegates, method chaining with the '+' operator, and method unsubscription with the '-' operator.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * C# Compiler (Roslyn)
+   * Operating System: Windows / macOS / Linux
+
+3. THEORY & CONCEPT:
+   A multicast delegate in C# holds references to multiple methods simultaneously in an internal invocation list.
+   When a multicast delegate is called, all methods in its invocation list execute sequentially in the order they were added.
+   Operators:
+     - '+' or '+=' combines delegates, appending a method to the invocation list.
+     - '-' or '-=' removes a method from the invocation list.
+   Multicast delegates typically have a 'void' return type because returning values from multiple methods would result in only the final method's return value being retained.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create a C# Console Application.
+   2. Declare delegate: 'delegate void Mdelegate();'.
+   3. Define class 'DM' with static methods 'display()' and 'Print()'.
+   4. In 'Main()', instantiate delegates 'm1' for display and 'm2' for Print.
+   5. Combine using '+' to create 'm3 = m1 + m2' and 'm4 = m2 + m1'.
+   6. Remove a method using '-' to create 'm5 = m3 - m2'.
+   7. Invoke m3, m4, and m5, printing output headers before each invocation.
+   8. Build and execute the program.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-03B-Code.cs
+----------------------------------------------------------------------
+using System;
+
+namespace multicast_delegate
+{
+    delegate void Mdelegate();
+
+    class DM
+    {
+        public static void display()
+        {
+            Console.WriteLine("hello");
+        }
+
+        public static void Print()
+        {
+            Console.WriteLine("hello world");
+        }
+    }
+
+    class Mtest
+    {
+        public static void Main()
+        {
+            Mdelegate m1 = new Mdelegate(DM.display);
+            Mdelegate m2 = new Mdelegate(DM.Print);
+            Mdelegate m3 = m1 + m2;
+            Mdelegate m4 = m2 + m1;
+            Mdelegate m5 = m3 - m2;
+
+            Console.WriteLine("delegate M3:");
+            m3();
+
+            Console.WriteLine("delegate M4:");
+            m4();
+
+            Console.WriteLine("delegate M5:");
+            m5();
+        }
+    }
+}
+
+6. HOW TO RUN THE CODE:
+   1. Run: dotnet run
+   2. Observe the execution sequences for delegates m3, m4, and m5.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   delegate M3:
+   hello
+   hello world
+   delegate M4:
+   hello world
+   hello
+   delegate M5:
+   hello
+
+8. RESULT:
+   Multicast delegate chaining and method removal in C# was successfully implemented and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Exception handling in multicast: If one method in a multicast chain throws an unhandled exception, subsequent methods in the invocation list will not execute.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================

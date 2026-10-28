@@ -1,0 +1,91 @@
+================================================================================
+PRACTICAL 05C: AUTHENTICATION AND AUTHORIZATION IN ASP.NET CORE
+================================================================================
+
+1. AIM / OBJECTIVE:
+   To develop an ASP.NET Core MVC application implementing ASP.NET Core Identity for user registration, login authentication, and resource protection via the [Authorize] attribute.
+
+2. REQUIREMENTS:
+   * .NET SDK 6.0 / 7.0 / 8.0 / 9.0 or Visual Studio 2022 / 2026
+   * ASP.NET Core Identity with Individual Accounts authentication
+   * Entity Framework Core with SQL Server LocalDB or SQLite
+   * Web browser
+
+3. THEORY & CONCEPT:
+   Authentication is the process of verifying who a user is (e.g. through email/password credentials).
+   Authorization is the process of verifying what permissions or roles an authenticated user holds (determining whether they can access a specific resource).
+   ASP.NET Core Identity is a complete membership management system handling password hashing, cookie authentication, role assignment, and multi-factor authentication.
+   [Authorize] Attribute: Applied at the controller or action level. It restricts execution exclusively to authenticated users; unauthorized requests automatically receive HTTP 401 or are redirected to the login endpoint.
+
+4. PROCEDURE / STEP-BY-STEP INSTRUCTIONS:
+   1. Create an ASP.NET Core Web App (Model-View-Controller) named 'AuthDemo'.
+   2. In the 'Additional Information' dialog, set Authentication Type to 'Individual Accounts'.
+   3. In Package Manager Console, run 'Update-Database' to scaffold and generate the ASP.NET Identity tables.
+   4. In 'Controllers/HomeController.cs', import 'Microsoft.AspNetCore.Authorization' and add the '[Authorize]' decorated 'Secret()' action method.
+   5. In 'Views/Home/', create 'Secret.cshtml' containing '<h2>Authorized Users Only</h2>'.
+   6. Run the application and navigate to '/Home/Secret' while unauthenticated -> verify redirection to '/Identity/Account/Login'.
+   7. Register a new user account, log in, and navigate to '/Home/Secret' -> verify successful page rendering.
+
+5. PROGRAM / COMPLETE SOURCE CODE:
+----------------------------------------------------------------------
+File: Practical-05C-Code.cs (Controllers/HomeController.cs)
+----------------------------------------------------------------------
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace AuthDemo.Controllers
+{
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        // Action secured with [Authorize] attribute
+        // Redirects unauthenticated users to the Login page automatically
+        [Authorize]
+        public IActionResult Secret()
+        {
+            return View();
+        }
+    }
+}
+
+----------------------------------------------------------------------
+File: Secret.cshtml (Views/Home/Secret.cshtml)
+----------------------------------------------------------------------
+@{
+    ViewData["Title"] = "Secret Page";
+}
+
+<h2>Authorized Users Only</h2>
+<p>Congratulations! You have successfully accessed this protected page because you are authenticated.</p>
+
+6. HOW TO RUN THE CODE:
+   1. Run the project in Visual Studio or terminal: dotnet run
+   2. Open browser at https://localhost:<port>/Home/Secret.
+   3. Notice automatic redirection to the Login page.
+   4. Click 'Register', enter email and password, and register an account.
+   5. Log in with your credentials.
+   6. Re-visit https://localhost:<port>/Home/Secret to view 'Authorized Users Only'.
+
+7. SAMPLE INPUT & EXPECTED OUTPUT:
+   Unauthenticated Access Attempt:
+   Redirected to: /Identity/Account/Login?ReturnUrl=%2FHome%2FSecret
+   
+   Authenticated Access:
+   URL: /Home/Secret
+   Authorized Users Only
+   Congratulations! You have successfully accessed this protected page because you are authenticated.
+
+8. RESULT:
+   User authentication and authorization using ASP.NET Core Identity and [Authorize] was successfully developed and verified.
+
+9. TROUBLESHOOTING & TECHNICAL NOTES:
+   * Database Migration: Ensure 'Update-Database' is run in Package Manager Console (or 'dotnet ef database update' in CLI) to create Identity database tables before running.
+   * ReturnUrl parameter: Preserves the originally requested target URL after successful login.
+
+================================================================================
+END OF PRACTICAL DOCUMENT
+================================================================================
